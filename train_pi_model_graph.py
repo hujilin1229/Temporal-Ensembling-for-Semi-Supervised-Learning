@@ -17,7 +17,7 @@ def main():
     # NUM_TRAIN_SAMPLES = 73257
     # NUM_TEST_SAMPLES = 26032
 
-    NUM_TRAIN_SAMPLES = 10000
+    NUM_TRAIN_SAMPLES = 73257
 
     # Editable variables
     num_labeled_samples = 1000
