@@ -27,7 +27,7 @@ def main():
     num_train_unlabeled_samples = NUM_TRAIN_SAMPLES - \
         num_labeled_samples - num_validation_samples
     batch_size = 25
-    epochs = 300
+    epochs = 10
     max_learning_rate = 0.001
     initial_beta1 = 0.9
     final_beta1 = 0.5
@@ -140,38 +140,37 @@ def main():
 
         print('\nTrain Ended! Best Validation accuracy = {}\n'.format(best_val_accuracy))
 
-    else:
-        # Load the best model
-        root = tfe.Checkpoint(optimizer=optimizer,
-                              model=model,
-                              optimizer_step=tf.train.get_or_create_global_step())
-        root.restore(tf.train.latest_checkpoint(checkpoint_directory))
+    # Load the best model
+    root = tfe.Checkpoint(optimizer=optimizer,
+                          model=model,
+                          optimizer_step=tf.train.get_or_create_global_step())
+    root.restore(tf.train.latest_checkpoint(checkpoint_directory))
 
-        all_features = []
-        labels = []
-        for batch_nr in range(batches_per_epoch):
-            X_labeled_train, y_labeled_train, _ = train_labeled_iterator.get_next()
-            # print(X_labeled_train.shape)
-            all_features.append(X_labeled_train)
-            labels.append(y_labeled_train)
+    all_features = []
+    labels = []
+    for batch_nr in range(batches_per_epoch):
+        X_labeled_train, y_labeled_train, _ = train_labeled_iterator.get_next()
+        # print(X_labeled_train.shape)
+        all_features.append(X_labeled_train)
+        labels.append(y_labeled_train)
 
-        for batch_val_nr in range(batches_per_epoch_val):
-            X_val, y_val, _ = validation_iterator.get_next()
-            all_features.append(X_val)
-            labels.append(y_val)
+    for batch_val_nr in range(batches_per_epoch_val):
+        X_val, y_val, _ = validation_iterator.get_next()
+        all_features.append(X_val)
+        labels.append(y_val)
 
-        # Evaluate on the final test set
-        num_test_batches = math.ceil(NUM_TEST_SAMPLES/batch_size)
-        print("Num of test batches is ", num_test_batches)
-        test_accuracy = tfe.metrics.Accuracy()
-        for test_batch in range(num_test_batches):
-            X_test, y_test, _ = test_iterator.get_next()
-            print(X_test.shape)
-            y_test_predictions = model(X_test, training=False)
-            labels.append(y_test_predictions)
-            test_accuracy(tf.argmax(y_test_predictions, 1), tf.argmax(y_test, 1))
+    # Evaluate on the final test set
+    num_test_batches = math.ceil(NUM_TEST_SAMPLES/batch_size)
+    print("Num of test batches is ", num_test_batches)
+    test_accuracy = tfe.metrics.Accuracy()
+    for test_batch in range(num_test_batches):
+        X_test, y_test, _ = test_iterator.get_next()
+        print(X_test.shape)
+        y_test_predictions = model(X_test, training=False)
+        labels.append(y_test_predictions)
+        test_accuracy(tf.argmax(y_test_predictions, 1), tf.argmax(y_test, 1))
 
-        print("Final Test Accuracy: {:.6%}".format(test_accuracy.result()))
+    print("Final Test Accuracy: {:.6%}".format(test_accuracy.result()))
 
 
 if __name__ == "__main__":
