@@ -10,7 +10,7 @@ from tfrecord_loader import TfrecordLoader
 
 from pi_model import PiModel, pi_model_loss, pi_model_gradients, ramp_up_function, ramp_down_function
 
-train = False
+train = True
 
 def main():
     # Constants variables
