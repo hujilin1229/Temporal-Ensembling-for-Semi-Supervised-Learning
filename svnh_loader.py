@@ -198,6 +198,7 @@ class SvnhLoader:
                 self._num_labeled_samples/self._NUM_CLASSES), :], axis=0)
             labeled_train_y = np.append(labeled_train_y, current_label_y[:int(
                 self._num_labeled_samples/self._NUM_CLASSES)])
+
             current_label_X = current_label_X[int(
                 self._num_labeled_samples/self._NUM_CLASSES):, :]
             current_label_y = current_label_y[int(
@@ -207,6 +208,7 @@ class SvnhLoader:
                 self._num_validation_samples/self._NUM_CLASSES)], axis=0)
             validation_y = np.append(validation_y, current_label_y[:int(
                 self._num_validation_samples/self._NUM_CLASSES)])
+            # Now let's take care of unlabeled data
             current_label_X = current_label_X[int(
                 self._num_validation_samples/self._NUM_CLASSES):, :]
             current_label_y = current_label_y[int(

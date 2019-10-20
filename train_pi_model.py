@@ -16,6 +16,8 @@ def main():
     NUM_TRAIN_SAMPLES = 73257
     NUM_TEST_SAMPLES = 26032
 
+
+
     # Editable variables
     num_labeled_samples = 1000
     num_validation_samples = 200
@@ -145,6 +147,7 @@ def main():
     test_accuracy = tfe.metrics.Accuracy()
     for test_batch in range(num_test_batches):
         X_test, y_test, _ = test_iterator.get_next()
+        print(X_test.shape)
         y_test_predictions = model(X_test, training=False)
         test_accuracy(tf.argmax(y_test_predictions, 1), tf.argmax(y_test, 1))
 
